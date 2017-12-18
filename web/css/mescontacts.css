@@ -1,0 +1,13 @@
+body {
+    padding-top: 50px;
+}
+
+.contactNom:hover, .contactNom:focus {
+    text-decoration: none;
+}
+
+.footer {
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+    text-align: center;
+}

@@ -1,0 +1,17 @@
+{% extends "layout.html.twig" %}
+
+{% block title %}{{ contact.nom }}{% endblock %}
+
+{% block content %}
+    <p>
+    <h2>{{ contact.nom }}</h2>
+    <p>{{ contact.prenom }}</p>
+    <p>{{ contact.email }}</p>
+    <h3>Adresses</h3>
+    {% for adresse in adresses %}
+        {{ adresse.rue }} {{ adresse.codepostal }} {{ adresse.ville }}<br>
+    {% else %}
+        Pas encore d'adresse.
+    {% endfor %}
+    </p>
+{% endblock %}
