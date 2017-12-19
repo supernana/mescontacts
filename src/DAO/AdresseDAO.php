@@ -31,9 +31,9 @@ class AdresseDAO extends DAO
      * @param $contactId
      * @return array
      */
-    public function chercheToutParContact($contactId) {
+    public function chercherToutParContact($contactId) {
         // Le contact associé n'est récupéré qu'une seule fois
-        $contact = $this->contactDAO->cherche($contactId);
+        $contact = $this->contactDAO->chercher($contactId);
 
         // con_id n'est pas sélectionné par la requête SQL
         // Le contact ne sera pas récupéré lors de la construction d'un objet de domaine
@@ -44,7 +44,7 @@ class AdresseDAO extends DAO
         $adresses = array();
         foreach ($resultat as $tuple) {
             $adrId = $tuple['adr_id'];
-            $adresse = $this->construiteObjetDomain($tuple);
+            $adresse = $this->construireObjetDomain($tuple);
             // The associated article is defined for the constructed comment
             // Le contact associé est défini pour l'adresse construite
             $adresse->setContact($contact);
@@ -59,7 +59,7 @@ class AdresseDAO extends DAO
      * @param array $tuple Le tuple qui contient les données d'un contact
      * @return \MesContacts\Domain\Contact
      */
-    protected function construiteObjetDomain(array $tuple) {
+    protected function construireObjetDomain(array $tuple) {
         $adresse = new Adresse();
         $adresse->setId($tuple['adr_id']);
         $adresse->setRue($tuple['adr_rue']);
@@ -69,7 +69,7 @@ class AdresseDAO extends DAO
         if (array_key_exists('con_id', $tuple)) {
             // Cherche et initialise le contact associé
             $contactId = $tuple['con_id'];
-            $contact = $this->contactDAO->cherche($contactId);
+            $contact = $this->contactDAO->chercher($contactId);
             $adresse->setContact($contact);
         }
 
@@ -81,7 +81,7 @@ class AdresseDAO extends DAO
      *
      * @param \MesContacts\Domain\Adresse $adresse L'adresse à enregistrée
      */
-    public function save(Adresse $adresse) {
+    public function enregistrer(Adresse $adresse) {
         $adresseData = array(
             'con_id' => $adresse->getContact()->getId(),
             'adr_rue' => $adresse->getRue(),
@@ -100,4 +100,14 @@ class AdresseDAO extends DAO
             $adresse->setId($id);
         }
     }
+
+    /**
+     * Supprime toutes les adresses d'un contact
+     *
+     * @param $contactId l'id du contact
+     */
+    public function supprimerToutParContact($contactId) {
+        $this->getDb()->delete('t_adresse', array('con_id' => $contactId));
+    }
+
 }

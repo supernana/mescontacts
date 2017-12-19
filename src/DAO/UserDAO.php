@@ -22,12 +22,12 @@ class UserDAO extends DAO implements UserProviderInterface
      * @return \MesContacts\Domain\User
      * @throws \Exception an exception if no matching user is found
      */
-    public function cherche($id) {
+    public function chercher($id) {
         $sql = "select * from t_user where use_id=?";
         $tuple = $this->getDb()->fetchAssoc($sql, array($id));
 
         if ($tuple) {
-            return $this->construiteObjetDomain($tuple);
+            return $this->construireObjetDomain($tuple);
         }
         else {
             throw new \Exception("Aucun utilisateur ne correspond à l'id " . $id);
@@ -43,7 +43,7 @@ class UserDAO extends DAO implements UserProviderInterface
         $tuple = $this->getDb()->fetchAssoc($sql, array($username));
 
         if ($tuple) {
-            return $this->construiteObjetDomain($tuple);
+            return $this->construireObjetDomain($tuple);
         }
         else {
             throw new UsernameNotFoundException(sprintf('User "%s" non trouvé.', $username));
@@ -76,7 +76,7 @@ class UserDAO extends DAO implements UserProviderInterface
      * @param array $tuple Le tuple qui contient les données d'un contact
      * @return \MesContacts\Domain\User
      */
-    protected function construiteObjetDomain(array $tuple) {
+    protected function construireObjetDomain(array $tuple) {
         $user = new User();
         $user->setId($tuple['use_id']);
         $user->setUsername($tuple['use_name']);

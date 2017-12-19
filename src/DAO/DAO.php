@@ -45,5 +45,5 @@ abstract class DAO
      *
      * @param array $tuple
      */
-    protected abstract function construiteObjetDomain(array $tuple);
+    protected abstract function construireObjetDomain(array $tuple);
 }

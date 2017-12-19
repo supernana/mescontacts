@@ -34,12 +34,12 @@ class ContactDAO extends DAO
      * @return \MesContacts\Domain\Contact
      * @throws \Exception si aucun contact correspondant à $id n'est trouvé
      */
-    public function cherche($id){
+    public function chercher($id){
         $sql = 'select * from t_contact where con_id=?';
         $tuple = $this->getDb()->fetchAssoc($sql,array($id));
 
         if ($tuple) {
-            return $this->construiteObjetDomain($tuple);
+            return $this->construireObjetDomain($tuple);
         }
         else {
             throw new \Exception('Aucun contact ne correspond à l\'id '. $id);
@@ -47,13 +47,47 @@ class ContactDAO extends DAO
     }
 
     /**
+     * Enregistre un contact en base de données
+     *
+     * @param \MesContacts\Domain\Contact $contact Le contact à enregistrer
+     */
+    public function enregistrer(Contact $contact) {
+        $contactData = array(
+            'con_nom' => $contact->getNom(),
+            'con_prenom' => $contact->getPrenom(),
+            'con_email' => $contact->getEmail(),
+            'use_id' => $contact->getUser()->getId()
+        );
+
+        if ($contact->getId()) {
+            // Le contact existe déjà : mise à jour
+            $this->getDb()->update('t_contact', $contactData, array('con_id' => $contact->getId()));
+        } else {
+            // Le contact n'existe pas : création
+            $this->getDb()->insert('t_contact', $contactData);
+            // Récupère l'id du dernier contact créé et le défini dans l'entité $contact
+            $id = $this->getDb()->lastInsertId();
+            $contact->setId($id);
+        }
+    }
+
+    /**
+     * Supprime un contact de la base de données
+     *
+     * @param integer $id L'id du contact
+     */
+    public function supprimer($id) {
+        // Supprime le contact
+        $this->getDb()->delete('t_contact', array('con_id' => $id));
+    }
+
+    /**
      * Retourne la liste de tous les contacts, trié par id (le plus recent en premier)
      *
      * @return array La liste des contacts
      */
-    //public function chercheToutParUser($userId){
-    public function chercheTout(){
-        $userId = 1;
+    public function chercherToutParUser($userId){
+        //$userId = 1;
         $sql = 'select * from t_contact where use_id=? order by con_id desc';
         $resultat = $this->getDb()->fetchAll($sql, array($userId));
 
@@ -61,7 +95,7 @@ class ContactDAO extends DAO
         $contacts= array();
         foreach ($resultat as $tuple) {
             $contactId = $tuple['con_id'];
-            $contacts[$contactId] = $this->construiteObjetDomain($tuple);
+            $contacts[$contactId] = $this->construireObjetDomain($tuple);
         }
         return $contacts;
     }
@@ -72,7 +106,7 @@ class ContactDAO extends DAO
      * @param array $tuple Le tuple qui contient les données d'un contact
      * @return \MesContacts\Domain\Contact
      */
-    protected function construiteObjetDomain(array $tuple) {
+    protected function construireObjetDomain(array $tuple) {
         $contact = new Contact();
         $contact->setId($tuple['con_id']);
         $contact->setNom($tuple['con_nom']);
@@ -82,11 +116,13 @@ class ContactDAO extends DAO
         if (array_key_exists('use_id', $tuple)) {
             // Cherche et initialise l'utilisateur associé
             $userId = $tuple['use_id'];
-            $user = $this->userDAO->cherche($userId);
+            $user = $this->userDAO->chercher($userId);
             $contact->setUser($user);
         }
 
         return $contact;
     }
+
+
 
 }
