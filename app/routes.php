@@ -79,11 +79,12 @@ $app->match('/adresse/{id}/add', function($id, Request $request) use ($app) {
     $adresse = new Adresse();
     $adresseForm = $app['form.factory']->create(AdresseType::class, $adresse);
     $adresseForm->handleRequest($request);
+    $contact = $app['dao.contact']->chercher($id);
     if ($adresseForm->isSubmitted() && $adresseForm->isValid()) {
-        $contact = $app['dao.contact']->chercher($id);
         $adresse->setContact($contact);
         $app['dao.adresse']->enregistrer($adresse);
         $app['session']->getFlashBag()->add('success', 'L\'adresse a été créé.');
+        return $app->redirect('/contact/'. $id);
     }
     return $app['twig']->render('adresse_form.html.twig', array(
         'title' => 'Nouvelle adresse pour '. $contact->getNom(),
@@ -98,6 +99,7 @@ $app->match('/adresse/{id}/edit', function($id, Request $request) use ($app) {
     if ($adresseForm->isSubmitted() && $adresseForm->isValid()) {
         $app['dao.adresse']->enregistrer($adresse);
         $app['session']->getFlashBag()->add('success', 'L\'adresse a été mise à jour.');
+        return $app->redirect('/contact/'. $adresse->getContact()->getId());
     }
     return $app['twig']->render('adresse_form.html.twig', array(
         'title' => 'Edition de l\'adresse de '. $adresse->getContact()->getNom(),
@@ -107,8 +109,9 @@ $app->match('/adresse/{id}/edit', function($id, Request $request) use ($app) {
 // Suppression d'un adresse
 $app->get('/adresse/{id}/delete', function($id, Request $request) use ($app) {
     // Delete the adresse
+    $adresse = $app['dao.adresse']->chercher($id);
     $app['dao.adresse']->supprimer($id);
     $app['session']->getFlashBag()->add('success', 'L\'adresse a été supprimé.');
     // Redirect to admin home page
-    return $app->redirect('/');
+    return $app->redirect('/contact/'. $adresse->getContact()->getId());
 })->bind('adresse_delete');

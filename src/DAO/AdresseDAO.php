@@ -77,6 +77,25 @@ class AdresseDAO extends DAO
     }
 
     /**
+     * Retourne une adresse correspondant à l'identifiant fourni
+     *
+     * @param integer $id
+     * @return \MesContacts\Domain\Adresse
+     * @throws \Exception si aucune adresse correspondant à $id n'est trouvé
+     */
+    public function chercher($id){
+        $sql = 'select * from t_adresse where adr_id=?';
+        $tuple = $this->getDb()->fetchAssoc($sql,array($id));
+
+        if ($tuple) {
+            return $this->construireObjetDomain($tuple);
+        }
+        else {
+            throw new \Exception('Aucune adresse ne correspond à l\'id '. $id);
+        }
+    }
+
+    /**
      * Enregistre une adresse en base de données
      *
      * @param \MesContacts\Domain\Adresse $adresse L'adresse à enregistrée
@@ -85,7 +104,7 @@ class AdresseDAO extends DAO
         $adresseData = array(
             'con_id' => $adresse->getContact()->getId(),
             'adr_rue' => $adresse->getRue(),
-            'adr_codepostal' => $adresse->getCodePostal(),
+            'adr_code_postal' => $adresse->getCodePostal(),
             'adr_ville' => $adresse->getVille()
         );
 
@@ -99,6 +118,16 @@ class AdresseDAO extends DAO
             $id = $this->getDb()->lastInsertId();
             $adresse->setId($id);
         }
+    }
+
+    /**
+     * Supprime une adresse de la base de données
+     *
+     * @param integer $id L'id de l'adresse
+     */
+    public function supprimer($id) {
+        // Supprime l'adresse
+        $this->getDb()->delete('t_adresse', array('adr_id' => $id));
     }
 
     /**

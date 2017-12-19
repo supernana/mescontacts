@@ -50,7 +50,7 @@ class Adresse
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId()
     {
         return $this->id;
     }
@@ -58,7 +58,7 @@ class Adresse
     /**
      * @param int $id
      */
-    public function setId(int $id): void
+    public function setId( $id)
     {
         $this->id = $id;
     }
@@ -66,7 +66,7 @@ class Adresse
     /**
      * @return string
      */
-    public function getRue(): string
+    public function getRue()
     {
         return $this->rue;
     }
@@ -74,7 +74,7 @@ class Adresse
     /**
      * @param string $rue
      */
-    public function setRue(string $rue): void
+    public function setRue( $rue)
     {
         $this->rue = $rue;
     }
@@ -82,7 +82,7 @@ class Adresse
     /**
      * @return string
      */
-    public function getCodePostal(): string
+    public function getCodePostal()
     {
         return $this->code_postal;
     }
@@ -90,7 +90,7 @@ class Adresse
     /**
      * @param string $code_postal
      */
-    public function setCodePostal(string $code_postal): void
+    public function setCodePostal($code_postal)
     {
         $this->code_postal = $code_postal;
     }
@@ -98,7 +98,7 @@ class Adresse
     /**
      * @return string
      */
-    public function getVille(): string
+    public function getVille()
     {
         return $this->ville;
     }
@@ -106,7 +106,7 @@ class Adresse
     /**
      * @param string $ville
      */
-    public function setVille(string $ville): void
+    public function setVille( $ville)
     {
         $this->ville = $ville;
     }
@@ -114,7 +114,7 @@ class Adresse
     /**
      * @return Contact
      */
-    public function getContact(): Contact
+    public function getContact()
     {
         return $this->contact;
     }
@@ -122,7 +122,7 @@ class Adresse
     /**
      * @param Contact $contact
      */
-    public function setContact(Contact $contact): void
+    public function setContact(Contact $contact)
     {
         $this->contact = $contact;
     }
