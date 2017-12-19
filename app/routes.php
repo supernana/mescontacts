@@ -4,6 +4,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 // Page d'accueil
 $app->get('/', function () use ($app) {
+
     $contacts = $app['dao.contact']->chercheTout();
     return $app['twig']->render('index.html.twig', array('contacts' => $contacts));
 })->bind('home');

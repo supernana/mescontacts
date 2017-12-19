@@ -24,7 +24,7 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
     'security.firewalls' => array(
         'secured' => array(
             'pattern' => '^/',
-            'anonymous' => false,
+            'anonymous' => true,
             'logout' => true,
             'form' => array('login_path' => '/login', 'check_path' => '/login_check'),
             'users' => function () use ($app) {
@@ -37,11 +37,12 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
 
 // Enregiste les services
 $app['dao.user'] = function ($app) {
-    var_dump("app.php");die;
     return new MesContacts\DAO\UserDAO($app['db']);
 };
 $app['dao.contact'] = function ($app) {
-    return new MesContacts\DAO\ContactDAO($app['db']);
+    $contactDAO = new MesContacts\DAO\ContactDAO($app['db']);
+    $contactDAO->setUserDAO($app['dao.user']);
+    return $contactDAO;
 };
 $app['dao.adresse'] = function ($app) {
     $adresseDAO = new MesContacts\DAO\AdresseDAO($app['db']);

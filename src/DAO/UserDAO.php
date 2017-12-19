@@ -23,7 +23,7 @@ class UserDAO extends DAO implements UserProviderInterface
      * @throws \Exception an exception if no matching user is found
      */
     public function cherche($id) {
-        $sql = "select * from t_user where usr_id=?";
+        $sql = "select * from t_user where use_id=?";
         $tuple = $this->getDb()->fetchAssoc($sql, array($id));
 
         if ($tuple) {
@@ -39,7 +39,7 @@ class UserDAO extends DAO implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        $sql = "select * from t_user where usr_name=?";
+        $sql = "select * from t_user where use_name=?";
         $tuple = $this->getDb()->fetchAssoc($sql, array($username));
 
         if ($tuple) {
@@ -78,11 +78,11 @@ class UserDAO extends DAO implements UserProviderInterface
      */
     protected function construiteObjetDomain(array $tuple) {
         $user = new User();
-        $user->setId($tuple['usr_id']);
-        $user->setUsername($tuple['usr_name']);
-        $user->setPassword($tuple['usr_password']);
-        $user->setSalt($tuple['usr_salt']);
-        $user->setRole($tuple['usr_role']);
+        $user->setId($tuple['use_id']);
+        $user->setUsername($tuple['use_name']);
+        $user->setPassword($tuple['use_password']);
+        $user->setSalt($tuple['use_salt']);
+        $user->setRole($tuple['use_role']);
         return $user;
     }
 }

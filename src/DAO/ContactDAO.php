@@ -53,8 +53,8 @@ class ContactDAO extends DAO
      */
     //public function chercheToutParUser($userId){
     public function chercheTout(){
-        $userId = 1
-        $sql = 'select * from t_contact where usr_id=? order by con_id desc';
+        $userId = 1;
+        $sql = 'select * from t_contact where use_id=? order by con_id desc';
         $resultat = $this->getDb()->fetchAll($sql, array($userId));
 
         // Converti le résultat de la requète en un tableau d'objets
@@ -79,9 +79,9 @@ class ContactDAO extends DAO
         $contact->setPrenom($tuple['con_prenom']);
         $contact->setEmail($tuple['con_email']);
 
-        if (array_key_exists('usr_id', $tuple)) {
+        if (array_key_exists('use_id', $tuple)) {
             // Cherche et initialise l'utilisateur associé
-            $userId = $tuple['usr_id'];
+            $userId = $tuple['use_id'];
             $user = $this->userDAO->cherche($userId);
             $contact->setUser($user);
         }
