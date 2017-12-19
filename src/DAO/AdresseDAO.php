@@ -75,4 +75,29 @@ class AdresseDAO extends DAO
 
         return $adresse;
     }
+
+    /**
+     * Enregistre une adresse en base de données
+     *
+     * @param \MesContacts\Domain\Adresse $adresse L'adresse à enregistrée
+     */
+    public function save(Adresse $adresse) {
+        $adresseData = array(
+            'con_id' => $adresse->getContact()->getId(),
+            'adr_rue' => $adresse->getRue(),
+            'adr_codepostal' => $adresse->getCodePostal(),
+            'adr_ville' => $adresse->getVille()
+        );
+
+        if ($adresse->getId()) {
+            // L'adresse existe déjà : mise à jour
+            $this->getDb()->update('t_adresse', $adresseData, array('adr_id' => $adresse->getId()));
+        } else {
+            // L'adresse n'existe pas : création
+            $this->getDb()->insert('t_adresse', $adresseData);
+            // Récupère l'id de l'adresse créé et le défini dans l'entité $adresse
+            $id = $this->getDb()->lastInsertId();
+            $adresse->setId($id);
+        }
+    }
 }
