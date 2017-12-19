@@ -44,11 +44,7 @@
             </div><!-- /.container -->
         </nav>
         <div id="content">
-            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                {% block content %}{% endblock %}
-            {% else %}
-                <a href="{{ path('login') }}">Connexion</a>
-            {% endif %}
+            {% block content %}{% endblock %}
         </div>
         <footer class="footer">
             <a href="https://github.com/supernana/MesContacts">MesContacts</a>
