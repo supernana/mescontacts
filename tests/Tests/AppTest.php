@@ -31,6 +31,22 @@ class AppTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
+    public function testEmailValide()
+    {
+        $client = $this->createClient();
+
+        $client->request('GET', '/validate/prefixe@suffixe.extension');
+        $this->assertTrue($client->getResponse()->isOk());
+
+        $client->request('GET', '/validate/prefixe@suffixe');
+        $this->assertFalse($client->getResponse()->isOk());
+
+        $client->request('GET', '/validate/prefixe.suffixe');
+        $this->assertFalse($client->getResponse()->isOk());
+
+        $client->request('GET', '/validate/prefixe');
+        $this->assertFalse($client->getResponse()->isOk());
+    }
     /**
      * {@inheritDoc}
      */
@@ -66,7 +82,10 @@ class AppTest extends WebTestCase
             array('/contact/add'),
             array('/contact/1/edit'),
             array('/adresse/1/add'),
-            array('/adresse/1/edit')
+            array('/adresse/1/edit'),
+            array('/validate/prefixe@suffixe.extension')
         );
     }
+
+
 }

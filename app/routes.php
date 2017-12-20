@@ -5,6 +5,7 @@ use MesContacts\Domain\Adresse;
 use MesContacts\Form\Type\AdresseType;
 use MesContacts\Domain\Contact;
 use MesContacts\Form\Type\ContactType;
+use Symfony\Component\Validator\Constraints as Assert;
 
 // Page d'accueil
 $app->get('/', function () use ($app) {
@@ -115,3 +116,14 @@ $app->get('/adresse/{id}/delete', function($id, Request $request) use ($app) {
     // Redirect to admin home page
     return $app->redirect('/contact/'. $adresse->getContact()->getId());
 })->bind('adresse_delete');
+
+// API : test email
+$app->get('/validate/{email}', function ($email) use ($app) {
+    $errors = $app['validator']->validate($email, new Assert\Email());
+
+    if (count($errors) > 0) {
+        return false;
+    } else {
+        return true;
+    }
+})->bind('api_validate_email');
